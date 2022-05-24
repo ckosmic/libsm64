@@ -136,6 +136,7 @@ extern SM64_LIB_FN void sm64_set_mario_water_level(int32_t marioId, signed int l
 extern SM64_LIB_FN void sm64_set_mario_floor_override(int32_t marioId, uint16_t terrain, int16_t floorType);
 extern SM64_LIB_FN void sm64_mario_take_damage(int32_t marioId, uint32_t damage, uint32_t subtype, float x, float y, float z);
 extern SM64_LIB_FN void sm64_mario_heal(int32_t marioId, uint8_t healCounter);
+extern SM64_LIB_FN void sm64_mario_interact_cap( int32_t marioId, uint32_t capFlag, uint16_t capTime );
 
 extern SM64_LIB_FN uint32_t sm64_surface_object_create( const struct SM64SurfaceObject *surfaceObject );
 extern SM64_LIB_FN void sm64_surface_object_move( uint32_t objectId, const struct SM64ObjectTransform *transform );
