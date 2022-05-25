@@ -483,7 +483,7 @@ SM64_LIB_FN void sm64_mario_interact_cap( int32_t marioId, uint32_t capFlag, uin
         play_sound(SOUND_MARIO_HERE_WE_GO, gMarioState->marioObj->header.gfx.cameraToObject);
 
         if (capMusic != 0) {
-            //play_cap_music(capMusic);
+            play_cap_music(capMusic);
         }
 	}
 }

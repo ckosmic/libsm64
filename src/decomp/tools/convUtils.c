@@ -63,8 +63,10 @@ void ctl_free(){
 
 void snd_ptrs_to_offsets(struct Sound* snd, uintptr_t ctlData){
 	struct Sample* smp = snd->sample_addr;
-	smp->loop = (struct Loop*)((uintptr_t)(smp->loop) - ctlData);
-	smp->book = (struct Book*)((uintptr_t)(smp->book) - ctlData);
+	if((uintptr_t)(smp->loop) > ctlData)
+		smp->loop = (struct Loop*)((uintptr_t)(smp->loop) - ctlData);
+	if((uintptr_t)(smp->book) > ctlData)
+		smp->book = (struct Book*)((uintptr_t)(smp->book) - ctlData);
 	snd->sample_addr = (struct Sample*)((uintptr_t)(snd->sample_addr) - ctlData);
 }
 
@@ -278,8 +280,9 @@ struct CTL* parse_ctl_data(unsigned char* ctlData, uintptr_t* pos){
 			}
 			if(used == 0){
 				int size = 0;
+				unsigned char* addr = ctlData+((uintptr_t)d->env_addr)+16;
 				envData[envCount].orig = (uintptr_t)(d->env_addr);
-				envData[envCount].addr = parse_envelope(ctlData+((uintptr_t)d->env_addr)+16, pos, &size);
+				envData[envCount].addr = parse_envelope(addr, pos, &size);
 				envData[envCount].size = size;
 				envCount++;
 			}
@@ -305,8 +308,9 @@ struct CTL* parse_ctl_data(unsigned char* ctlData, uintptr_t* pos){
 		}
 		if(used == 0){
 			int size = 0;
+			unsigned char* addr = ctlData+((uintptr_t)inst->env_addr)+16;
 			envData[envCount].orig = (uintptr_t)(inst->env_addr);
-			envData[envCount].addr = parse_envelope(ctlData+((uintptr_t)inst->env_addr)+16, pos, &size);
+			envData[envCount].addr = parse_envelope(addr, pos, &size);
 			envData[envCount].size = size;
 			envCount++;
 		}
