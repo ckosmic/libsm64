@@ -425,6 +425,16 @@ SM64_LIB_FN void sm64_set_mario_floor_override(int32_t marioId, uint16_t terrain
 	gMarioState->overrideFloorType = floorType;
 }
 
+SM64_LIB_FN void sm64_set_mario_health(int32_t marioId, uint16_t health)
+{
+	struct GlobalState *globalState = ((struct MarioInstance *)s_mario_instance_pool.objects[ marioId ])->globalState;
+    global_state_bind( globalState );
+	
+	gMarioState->health = health;
+	gMarioState->hurtCounter = 0;
+    gMarioState->healCounter = 0;
+}
+
 SM64_LIB_FN void sm64_mario_take_damage(int32_t marioId, uint32_t damage, uint32_t subtype, float x, float y, float z)
 {
 	struct GlobalState *globalState = ((struct MarioInstance *)s_mario_instance_pool.objects[ marioId ])->globalState;
@@ -441,7 +451,7 @@ SM64_LIB_FN void sm64_mario_heal(int32_t marioId, uint8_t healCounter)
 	gMarioState->healCounter += healCounter;
 }
 
-SM64_LIB_FN void sm64_mario_interact_cap( int32_t marioId, uint32_t capFlag, uint16_t capTime )
+SM64_LIB_FN void sm64_mario_interact_cap( int32_t marioId, uint32_t capFlag, uint16_t capTime, uint8_t playMusic )
 {
 	struct GlobalState *globalState = ((struct MarioInstance *)s_mario_instance_pool.objects[ marioId ])->globalState;
     global_state_bind( globalState );
@@ -482,7 +492,7 @@ SM64_LIB_FN void sm64_mario_interact_cap( int32_t marioId, uint32_t capFlag, uin
         play_sound(SOUND_MENU_STAR_SOUND, gMarioState->marioObj->header.gfx.cameraToObject);
         play_sound(SOUND_MARIO_HERE_WE_GO, gMarioState->marioObj->header.gfx.cameraToObject);
 
-        if (capMusic != 0) {
+        if (playMusic != 0 && capMusic != 0) {
             play_cap_music(capMusic);
         }
 	}
