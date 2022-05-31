@@ -1,5 +1,7 @@
 /build/
 /dist/
+/build32/
+/dist32/
 /test/level.c
 /test/level.h
 run-test
