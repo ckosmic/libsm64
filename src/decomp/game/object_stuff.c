@@ -82,7 +82,11 @@ static struct Object *allocate_object(void) {
 
     for (i = 0; i < 0x50; i++) {
         obj->rawData.asS32[i] = 0;
+#if !IS_64_BIT
+        obj->rawData.asVoidPtr[i] = NULL;
+#else
         obj->ptrData.asVoidPtr[i] = NULL;
+#endif
     }
 
     obj->unused1 = 0;

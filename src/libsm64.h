@@ -16,7 +16,7 @@
     #define SM64_LIB_FN
 #endif
 
-#define LIB_VERSION 1
+#define LIB_VERSION 2
 
 struct SM64Surface
 {
