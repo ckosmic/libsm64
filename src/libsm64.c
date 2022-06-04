@@ -43,6 +43,8 @@
 #include "decomp/pc/audio/audio_alsa.h"
 #include "decomp/audio/external.h"
 #include "decomp/audio/load_dat.h"
+#include "decomp/audio/load.h"
+#include "decomp/audio/effects.h"
 #include "decomp/tools/convTypes.h"
 #include "decomp/tools/convUtils.h"
 
@@ -558,6 +560,14 @@ SM64_LIB_FN void sm64_play_sound(int32_t soundBits, float *pos)
 SM64_LIB_FN void sm64_play_sound_global(int32_t soundBits)
 {
     play_sound(soundBits,gGlobalSoundSource);
+}
+
+SM64_LIB_FN void sm64_set_volume(float volume)
+{
+    if(volume < 0) volume = 0;
+    else if(volume > 1) volume = 1;
+    gAudioVolume = volume;
+    gTrackVolume = volume;
 }
 
 

@@ -61,13 +61,13 @@ void ctl_free(){
 	free(gCtlSeqs);
 }
 
-void snd_ptrs_to_offsets(struct Sound* snd, uintptr_t ctlData){
-	struct Sample* smp = snd->sample_addr;
+void snd_ptrs_to_offsets(struct CSound* snd, uintptr_t ctlData){
+	struct CSample* smp = snd->sample_addr;
 	if((uintptr_t)(smp->loop) > ctlData)
-		smp->loop = (struct Loop*)((uintptr_t)(smp->loop) - ctlData);
+		smp->loop = (struct CLoop*)((uintptr_t)(smp->loop) - ctlData);
 	if((uintptr_t)(smp->book) > ctlData)
-		smp->book = (struct Book*)((uintptr_t)(smp->book) - ctlData);
-	snd->sample_addr = (struct Sample*)((uintptr_t)(snd->sample_addr) - ctlData);
+		smp->book = (struct CBook*)((uintptr_t)(smp->book) - ctlData);
+	snd->sample_addr = (struct CSample*)((uintptr_t)(snd->sample_addr) - ctlData);
 }
 
 void ptrs_to_offsets(struct seqFile* ctl){
@@ -80,10 +80,10 @@ void ptrs_to_offsets(struct seqFile* ctl){
 		uintptr_t ctlData = (uintptr_t)ptr + 0x10;
         // find all samples in the CTL file
         for (int j = 0; j < ptr->numInstruments; j++){
-            struct Instrument* inst = ptr->instrument_pointers[j];
+            struct CInstrument* inst = ptr->instrument_pointers[j];
             if (inst==0x0)
                 continue; // null instrument.
-			inst->env_addr = (struct Envelope*)((uintptr_t)inst->env_addr - ctlData);
+			inst->env_addr = (struct CEnvelope*)((uintptr_t)inst->env_addr - ctlData);
             if (inst->sound_hi.sample_addr!=0x0){
                 snd_ptrs_to_offsets(&(inst->sound_hi), ctlData);
             }
@@ -93,31 +93,31 @@ void ptrs_to_offsets(struct seqFile* ctl){
             if (inst->sound_lo.sample_addr!=0x0){
                 snd_ptrs_to_offsets(&(inst->sound_lo), ctlData);
             }
-			ptr->instrument_pointers[j] = (struct Instrument*)((uintptr_t)(inst) - ctlData);
+			ptr->instrument_pointers[j] = (struct CInstrument*)((uintptr_t)(inst) - ctlData);
         }
 		if(ptr->numDrums != 0){
 			for (int j = 0; j < ptr->numDrums; j++){
-				struct Drum* drum = ptr->drum_pointers[j];
+				struct CDrum* drum = ptr->drum_pointers[j];
 				if (drum==0x0)
 					continue; // null drum.
-				drum->env_addr = (struct Envelope*)((uintptr_t)drum->env_addr - ctlData);
+				drum->env_addr = (struct CEnvelope*)((uintptr_t)drum->env_addr - ctlData);
 				if (drum->snd.sample_addr!=0x0){
 					snd_ptrs_to_offsets(&(drum->snd), ctlData);
 				}
-				ptr->drum_pointers[j] = (struct Drum*)((uintptr_t)(drum) - ctlData);
+				ptr->drum_pointers[j] = (struct CDrum*)((uintptr_t)(drum) - ctlData);
 			}
-			ptr->drum_pointers = (struct Drum**)((uintptr_t)(ptr->drum_pointers) - ctlData);
+			ptr->drum_pointers = (struct CDrum**)((uintptr_t)(ptr->drum_pointers) - ctlData);
 		}
     }
 }
 
-struct Loop* parse_loop(unsigned char* loop, uintptr_t* pos){
+struct CLoop* parse_loop(unsigned char* loop, uintptr_t* pos){
 	uint32_t count = read_u32_be(loop + 8); // variable is signed, but the data is being read as unsigned.
-	unsigned int size = sizeof(struct Loop) - 4;
+	unsigned int size = sizeof(struct CLoop) - 4;
 	if(count != 0){
-		size = sizeof(struct Loop) - 4 + sizeof(short) * 16;
+		size = sizeof(struct CLoop) - 4 + sizeof(short) * 16;
 	}
-	struct Loop* loop_ptr = (struct Loop*)(*pos);
+	struct CLoop* loop_ptr = (struct CLoop*)(*pos);
 	*pos += size;
 	*pos = ALIGN16(*pos);
     
@@ -135,9 +135,9 @@ struct Loop* parse_loop(unsigned char* loop, uintptr_t* pos){
     return loop_ptr;
 }
 
-struct Book* parse_book(unsigned char* book, uintptr_t* pos){
-	struct Book* book_ptr = (struct Book*)(*pos);
-	*pos += sizeof(struct Book);
+struct CBook* parse_book(unsigned char* book, uintptr_t* pos){
+	struct CBook* book_ptr = (struct CBook*)(*pos);
+	*pos += sizeof(struct CBook);
 	*pos = ALIGN16(*pos);
     book_ptr->order = read_u32_be(book);
     book_ptr->npredictors = read_u32_be(book + 4); // both are signed
@@ -148,9 +148,9 @@ struct Book* parse_book(unsigned char* book, uintptr_t* pos){
     return book_ptr;
 }
 
-struct Sample* parse_sample(unsigned char* sample,unsigned char* ctl, uintptr_t* pos){
-	struct Sample* samp = (struct Sample*)(*pos);
-	*pos += sizeof(struct Sample);
+struct CSample* parse_sample(unsigned char* sample,unsigned char* ctl, uintptr_t* pos){
+	struct CSample* samp = (struct CSample*)(*pos);
+	*pos += sizeof(struct CSample);
 	*pos = ALIGN16(*pos);
     samp->zero=read_u32_be(sample);
     samp->addr=read_u32_be(sample+4);
@@ -163,8 +163,8 @@ struct Sample* parse_sample(unsigned char* sample,unsigned char* ctl, uintptr_t*
     return samp;
 }
 
-struct Sound* parse_sound(unsigned char* sound,unsigned char* ctl, uintptr_t* pos, uintptr_t sndPos, struct SampleList* samples){
-	struct Sound* snd = (struct Sound*)(sndPos);
+struct CSound* parse_sound(unsigned char* sound,unsigned char* ctl, uintptr_t* pos, uintptr_t sndPos, struct SampleList* samples){
+	struct CSound* snd = (struct CSound*)(sndPos);
     snd->sample_addr=read_u32_be(sound);
     snd->tuning = (float)read_f32_be(sound+4);
     // if sample_addr is 0 then the sound is null
@@ -188,8 +188,8 @@ struct Sound* parse_sound(unsigned char* sound,unsigned char* ctl, uintptr_t* po
     return snd;
 }
 
-struct Drum* parse_drum(unsigned char* drum,unsigned char* ctl, uintptr_t* pos, struct SampleList* samples){ /* Read Drum data */
-    struct Drum* drumData = malloc(sizeof(struct Drum));
+struct CDrum* parse_drum(unsigned char* drum,unsigned char* ctl, uintptr_t* pos, struct SampleList* samples){ /* Read Drum data */
+    struct CDrum* drumData = malloc(sizeof(struct CDrum));
     drumData->release_rate = drum[0];
     drumData->pan = drum[1];
     drumData->loaded = drum[2];
@@ -199,7 +199,7 @@ struct Drum* parse_drum(unsigned char* drum,unsigned char* ctl, uintptr_t* pos, 
     return drumData;
 }
 
-struct Envelope* parse_envelope(unsigned char* env, uintptr_t* pos, int* size){
+struct CEnvelope* parse_envelope(unsigned char* env, uintptr_t* pos, int* size){
 	int count = 0;
 	while(1){
 		unsigned short delay = read_u16_le(env + count * 4);
@@ -209,8 +209,8 @@ struct Envelope* parse_envelope(unsigned char* env, uintptr_t* pos, int* size){
         if ((1 <= delayC && delayC <= 3) || delay == 0)
             break;
 	}
-	*size = sizeof(struct Envelope) + sizeof(struct delay_arg) * (count-1);
-	struct Envelope* envData = malloc(*size);
+	*size = sizeof(struct CEnvelope) + sizeof(struct delay_arg) * (count-1);
+	struct CEnvelope* envData = malloc(*size);
     for (int i = 0; i < count; i++){
         envData->delay_args[i].delay = read_u16_le(env + i * 4);
         envData->delay_args[i].arg = read_u16_le(env + i * 4 + 2);
@@ -218,8 +218,8 @@ struct Envelope* parse_envelope(unsigned char* env, uintptr_t* pos, int* size){
     return envData;
 }
 
-struct Instrument* parse_instrument(unsigned char* instrument,unsigned char* ctl, uintptr_t* pos, struct SampleList* samples){
-    struct Instrument* inst = malloc(sizeof(struct Instrument));
+struct CInstrument* parse_instrument(unsigned char* instrument,unsigned char* ctl, uintptr_t* pos, struct SampleList* samples){
+    struct CInstrument* inst = malloc(sizeof(struct CInstrument));
     inst->loaded = instrument[0];
     inst->normal_range_lo = instrument[1];
     inst->normal_range_hi = instrument[2];
@@ -246,7 +246,7 @@ struct SEQ* parse_seq_data(unsigned char* seq){
 
 struct CTL* parse_ctl_data(unsigned char* ctlData, uintptr_t* pos){
 	int instruments=read_u32_be(ctlData);
-	unsigned int size = sizeof(struct CTL) + sizeof(struct Instrument*) * (instruments-1);
+	unsigned int size = sizeof(struct CTL) + sizeof(struct CInstrument*) * (instruments-1);
 	struct CTL* ctl = (struct CTL*)(*pos);
 	*pos += size;
 	*pos = ALIGN16(*pos);
@@ -262,15 +262,15 @@ struct CTL* parse_ctl_data(unsigned char* ctlData, uintptr_t* pos){
 	samples.count = 0;
     // header parsed, now read data
 	if(ctl->numDrums != 0) {
-		ctl->drum_pointers= (struct Drum**)(*pos);
-		size = sizeof(struct Drum*) * ctl->numDrums;
+		ctl->drum_pointers= (struct CDrum**)(*pos);
+		size = sizeof(struct CDrum*) * ctl->numDrums;
 		*pos += size;
 		*pos = ALIGN16(*pos);
 		int drumTablePtr = read_u32_be(ctlData + 16);
 		for (int i = 0; i < ctl->numDrums; i++){
 			uint32_t data = read_u32_be(ctlData + drumTablePtr+16 + i * 4);
 			
-			struct Drum* d = parse_drum(ctlData+data+16,ctlData+16, pos, &samples);
+			struct CDrum* d = parse_drum(ctlData+data+16,ctlData+16, pos, &samples);
 			bool used = 0;
 			for(int j = 0; j < envCount; j++){
 				if(envData[j].orig == (uintptr_t)d->env_addr){
@@ -298,7 +298,7 @@ struct CTL* parse_ctl_data(unsigned char* ctlData, uintptr_t* pos){
         uint32_t data = read_u32_be(ctlData + 16 + instTablePtr + i * 4);
         if (data == 0)
             continue;
-        struct Instrument* inst = parse_instrument(ctlData+16+data,ctlData+16, pos, &samples);
+        struct CInstrument* inst = parse_instrument(ctlData+16+data,ctlData+16, pos, &samples);
 		bool used = 0;
 		for(int j = 0; j < envCount; j++){
 			if(envData[j].orig == (uintptr_t)inst->env_addr){
@@ -320,22 +320,22 @@ struct CTL* parse_ctl_data(unsigned char* ctlData, uintptr_t* pos){
 	
 	// Copy envelopes to ctl
 	for (int i = 0; i < envCount; i++){
-		struct Envelope* env = envData[i].addr;
+		struct CEnvelope* env = envData[i].addr;
         memcpy((uint8_t*)(*pos), env, envData[i].size);
 		for (int j = 0; j < ctl->numInstruments; j++){
-			struct Instrument* inst = ctl->instrument_pointers[j];
+			struct CInstrument* inst = ctl->instrument_pointers[j];
 			if (inst == 0x0)
 				continue;
 			if((uintptr_t)(inst->env_addr) == envData[i].orig){
-				inst->env_addr = (struct Envelope*)(*pos);
+				inst->env_addr = (struct CEnvelope*)(*pos);
 			}
 		}
 		for (int j = 0; j < ctl->numDrums; j++){
-			struct Drum* drum = ctl->drum_pointers[j];
+			struct CDrum* drum = ctl->drum_pointers[j];
 			if (drum == 0x0)
 				continue;
 			if((uintptr_t)(drum->env_addr) == envData[i].orig){
-				drum->env_addr = (struct Envelope*)(*pos);
+				drum->env_addr = (struct CEnvelope*)(*pos);
 			}
 		}
 		free(env);
@@ -345,25 +345,25 @@ struct CTL* parse_ctl_data(unsigned char* ctlData, uintptr_t* pos){
 	
 	// Copy instruments to ctl
 	for (int i = 0; i < ctl->numInstruments; i++){
-		struct Instrument* inst = ctl->instrument_pointers[i];
+		struct CInstrument* inst = ctl->instrument_pointers[i];
 		if (inst == 0x0)
 			continue;
-        memcpy((uint8_t*)(*pos), inst, sizeof(struct Instrument));
+        memcpy((uint8_t*)(*pos), inst, sizeof(struct CInstrument));
 		free(inst);
-		ctl->instrument_pointers[i] = (struct Instrument*)(*pos);
-		*pos += sizeof(struct Instrument);
+		ctl->instrument_pointers[i] = (struct CInstrument*)(*pos);
+		*pos += sizeof(struct CInstrument);
     }
 	*pos = ALIGN16(*pos);
 	
 	// Copy drums to ctl
 	for (int i = 0; i < ctl->numDrums; i++){
-		struct Drum* drum = ctl->drum_pointers[i];
+		struct CDrum* drum = ctl->drum_pointers[i];
 		if (drum == 0x0)
 			continue;
-        memcpy((uint8_t*)(*pos), drum, sizeof(struct Drum));
+        memcpy((uint8_t*)(*pos), drum, sizeof(struct CDrum));
 		free(drum);
-		ctl->drum_pointers[i] = (struct Drum*)(*pos);
-		*pos += sizeof(struct Drum);
+		ctl->drum_pointers[i] = (struct CDrum*)(*pos);
+		*pos += sizeof(struct CDrum);
     }
 	*pos = ALIGN16(*pos);
     // 

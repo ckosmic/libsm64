@@ -5,14 +5,14 @@
 
 struct EnvelopeMeta {
 	uintptr_t orig;
-	struct Envelope* addr;
+	struct CEnvelope* addr;
 	int size;
 };
 
 struct SampleList {
 	int count;
 	uintptr_t orig_addrs[256];
-	struct Sample* addrs[256];
+	struct CSample* addrs[256];
 };
 
 struct seqFile* parse_seqfile(unsigned char* seq);

@@ -21,6 +21,7 @@
 extern s32 gAudioErrorFlags;
 extern f32 gGlobalSoundSource[3];
 extern u32 gAudioRandom;
+extern f32 gAudioVolume;
 
 extern u8 gAudioSPTaskYieldBuffer[]; // ucode yield data ptr; only used in JP
 
