@@ -14,7 +14,7 @@ GeoLayout* mario_geo_ptr = 0x0;
 
 void initMarioGeo(unsigned char* rom) {
    if (mario_geo_ptr != 0x0) {
-      return;
+      return mario_geo_ptr;
    }
    uintptr_t ptr = convertPtr_follow(rom, 0x17002CE0); // 17002CE0 -> mario_geo_load_body
    uintptr_t data[] = {

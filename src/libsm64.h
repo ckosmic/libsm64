@@ -140,6 +140,7 @@ extern SM64_LIB_FN void sm64_set_mario_health(int32_t marioId, uint16_t health);
 extern SM64_LIB_FN void sm64_mario_take_damage(int32_t marioId, uint32_t damage, uint32_t subtype, float x, float y, float z);
 extern SM64_LIB_FN void sm64_mario_heal(int32_t marioId, uint8_t healCounter);
 extern SM64_LIB_FN void sm64_mario_interact_cap( int32_t marioId, uint32_t capFlag, uint16_t capTime, uint8_t playMusic );
+extern SM64_LIB_FN bool sm64_mario_attack(int32_t marioId, float x, float y, float z, float hitboxHeight);
 
 extern SM64_LIB_FN uint32_t sm64_surface_object_create( const struct SM64SurfaceObject *surfaceObject );
 extern SM64_LIB_FN void sm64_surface_object_move( uint32_t objectId, const struct SM64ObjectTransform *transform );
@@ -150,6 +151,7 @@ extern SM64_LIB_FN void sm64_play_music(uint8_t player, uint16_t seqArgs, uint16
 extern SM64_LIB_FN void sm64_stop_background_music(uint16_t seqId);
 extern SM64_LIB_FN void sm64_fadeout_background_music(uint16_t arg0, uint16_t fadeOut);
 extern SM64_LIB_FN uint16_t sm64_get_current_background_music();
+extern SM64_LIB_FN uint32_t sm64_get_sound_arg(uint32_t bank, uint32_t playFlags, uint32_t soundID, uint32_t priority, uint32_t flags2);
 extern SM64_LIB_FN void sm64_play_sound(int32_t soundBits, float *pos);
 extern SM64_LIB_FN void sm64_play_sound_global(int32_t soundBits);
 extern SM64_LIB_FN void sm64_set_volume(float volume);

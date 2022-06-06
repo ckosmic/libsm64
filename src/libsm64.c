@@ -500,6 +500,14 @@ SM64_LIB_FN void sm64_mario_interact_cap( int32_t marioId, uint32_t capFlag, uin
 	}
 }
 
+SM64_LIB_FN bool sm64_mario_attack(int32_t marioId, float x, float y, float z, float hitboxHeight)
+{
+	struct GlobalState *globalState = ((struct MarioInstance *)s_mario_instance_pool.objects[ marioId ])->globalState;
+    global_state_bind( globalState );
+	
+	return fake_interact_bounce_top(gMarioState, x, y, z, hitboxHeight);
+}
+
 SM64_LIB_FN uint32_t sm64_surface_object_create( const struct SM64SurfaceObject *surfaceObject )
 {
     uint32_t id = surfaces_load_object( surfaceObject );
@@ -550,6 +558,11 @@ SM64_LIB_FN void sm64_fadeout_background_music(uint16_t arg0, uint16_t fadeOut)
 SM64_LIB_FN uint16_t sm64_get_current_background_music()
 {
     return get_current_background_music();
+}
+
+SM64_LIB_FN uint32_t sm64_get_sound_arg(uint32_t bank, uint32_t playFlags, uint32_t soundID, uint32_t priority, uint32_t flags2)
+{
+    return SOUND_ARG_LOAD(bank, playFlags, soundID, priority, flags2);
 }
 
 SM64_LIB_FN void sm64_play_sound(int32_t soundBits, float *pos)
