@@ -271,7 +271,7 @@ u32 fake_interact_hit_from_below(struct MarioState *m, float x, float y, float z
             fake_bounce_off_object(m, x, y, z, hitboxHeight, 30.0f);
         }
         return TRUE;
-    } else if (fake_damage_knock_back(m, 0, 0, x, y, z)) {
+    } else/* if (fake_damage_knock_back(m, 0, 0, x, y, z))*/ {
         return FALSE;
     }
 
@@ -293,7 +293,7 @@ u32 fake_interact_bounce_top(struct MarioState *m, float x, float y, float z, fl
             fake_bounce_off_object(m, x, y, z, hitboxHeight, 30.0f);
         }
         return TRUE;
-    } else if (fake_damage_knock_back(m, 0, 0, x, y, z)) {
+    } else/* if (fake_damage_knock_back(m, 0, 0, x, y, z))*/ {
         return FALSE;
     }
 

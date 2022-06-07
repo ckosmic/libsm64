@@ -46,6 +46,13 @@ struct SM64SurfaceObject
     struct SM64Surface *surfaces;
 };
 
+struct SM64ObjectCollider
+{
+    float position[3];
+    float height;
+    float radius;
+};
+
 struct SM64MarioState
 {
     float position[3];
@@ -145,6 +152,10 @@ extern SM64_LIB_FN bool sm64_mario_attack(int32_t marioId, float x, float y, flo
 extern SM64_LIB_FN uint32_t sm64_surface_object_create( const struct SM64SurfaceObject *surfaceObject );
 extern SM64_LIB_FN void sm64_surface_object_move( uint32_t objectId, const struct SM64ObjectTransform *transform );
 extern SM64_LIB_FN void sm64_surface_object_delete( uint32_t objectId );
+
+extern SM64_LIB_FN uint32_t sm64_object_create( struct SM64ObjectCollider* collider );
+extern SM64_LIB_FN void sm64_object_move( uint32_t objectId, float x, float y, float z );
+extern SM64_LIB_FN void sm64_object_delete( uint32_t objectId );
 
 extern SM64_LIB_FN void sm64_seq_player_play_sequence(uint8_t player, uint8_t seqId, uint16_t arg2);
 extern SM64_LIB_FN void sm64_play_music(uint8_t player, uint16_t seqArgs, uint16_t fadeTimer);

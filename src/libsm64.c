@@ -183,6 +183,7 @@ SM64_LIB_FN void sm64_global_terminate( void )
     s_init_one_mario = false;
 	   
 	ctl_free();
+    free_obj_pool();
     alloc_only_pool_free( s_mario_geo_pool );
     surfaces_unload_all();
     unload_mario_anims();
@@ -320,6 +321,7 @@ SM64_LIB_FN void sm64_mario_tick( int32_t marioId, const struct SM64MarioInputs 
 
 	apply_mario_platform_displacement();
     bhv_mario_update();
+    resolve_object_collisions();
     update_mario_platform(); // TODO platform grabbed here and used next tick could be a use-after-free
 
     gfx_adapter_bind_output_buffers( outBuffers );
@@ -533,6 +535,22 @@ SM64_LIB_FN void sm64_surface_object_delete( uint32_t objectId )
     }
 
     surfaces_unload_object( objectId );
+}
+
+SM64_LIB_FN uint32_t sm64_object_create( struct SM64ObjectCollider* collider )
+{
+    uint32_t id = add_object_collider(collider);
+    return id;
+}
+
+SM64_LIB_FN void sm64_object_move( uint32_t objectId, float x, float y, float z )
+{
+    move_object_collider(objectId, x, y, z);
+}
+
+SM64_LIB_FN void sm64_object_delete( uint32_t objectId )
+{
+    delete_object_collider(objectId);
 }
 
 SM64_LIB_FN void sm64_seq_player_play_sequence(uint8_t player, uint8_t seqId, uint16_t arg2)
