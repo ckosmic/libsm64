@@ -284,7 +284,7 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
     }
 
     if (nextPos[1] > floorHeight + 100.0f) {
-        if (nextPos[1] + 160.0f >= ceilHeight) {
+        if (nextPos[1] + m->marioObj->hitboxHeight >= ceilHeight) {
             return GROUND_STEP_HIT_WALL_STOP_QSTEPS;
         }
 
@@ -294,7 +294,7 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
         return GROUND_STEP_LEFT_GROUND;
     }
 
-    if (floorHeight + 160.0f >= ceilHeight) {
+    if (floorHeight + m->marioObj->hitboxHeight >= ceilHeight) {
         return GROUND_STEP_HIT_WALL_STOP_QSTEPS;
     }
 
