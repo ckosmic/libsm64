@@ -369,13 +369,13 @@ SM64_LIB_FN void sm64_set_mario_position(int32_t marioId, float x, float y, floa
 	vec3f_copy(gMarioState->marioObj->header.gfx.pos, gMarioState->pos);
 }
 
-SM64_LIB_FN void sm64_set_mario_angle(int32_t marioId, int16_t x, int16_t y, int16_t z)
+SM64_LIB_FN void sm64_set_mario_angle(int32_t marioId, float angle)
 {
 	struct GlobalState *globalState = ((struct MarioInstance *)s_mario_instance_pool.objects[ marioId ])->globalState;
     global_state_bind( globalState );
 	
-	vec3s_set(gMarioState->faceAngle, x, y, z);
-	vec3s_set(gMarioState->marioObj->header.gfx.angle, 0, gMarioState->faceAngle[1], 0);
+	gMarioState->faceAngle[1] = (short)(angle * (32768.0f * 3.14159f));
+	gMarioState->marioObj->header.gfx.angle[1] = (short)(angle * (32768.0f * 3.14159f));
 }
 
 SM64_LIB_FN void sm64_set_mario_velocity(int32_t marioId, float x, float y, float z)
@@ -410,6 +410,14 @@ SM64_LIB_FN void sm64_set_mario_state(int32_t marioId, uint32_t flags)
     global_state_bind( globalState );
 	
 	gMarioState->flags = flags;
+}
+
+SM64_LIB_FN void sm64_set_mario_invincibility(int32_t marioId, int16_t timer)
+{
+	struct GlobalState *globalState = ((struct MarioInstance *)s_mario_instance_pool.objects[ marioId ])->globalState;
+    global_state_bind( globalState );
+	
+	gMarioState->invincTimer = timer;
 }
 
 SM64_LIB_FN void sm64_set_mario_water_level(int32_t marioId, signed int level)
