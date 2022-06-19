@@ -428,13 +428,14 @@ SM64_LIB_FN void sm64_set_mario_water_level(int32_t marioId, signed int level)
 	gMarioState->waterLevel = level;
 }
 
-SM64_LIB_FN void sm64_set_mario_floor_override(int32_t marioId, uint16_t terrain, int16_t floorType)
+SM64_LIB_FN void sm64_set_mario_floor_override(int32_t marioId, uint16_t terrain, int16_t floorType, int16_t floorForce)
 {
 	struct GlobalState *globalState = ((struct MarioInstance *)s_mario_instance_pool.objects[ marioId ])->globalState;
     global_state_bind( globalState );
 	
 	gMarioState->overrideTerrain = terrain;
 	gMarioState->overrideFloorType = floorType;
+    gMarioState->overrideFloorForce = floorForce;
 }
 
 SM64_LIB_FN void sm64_set_mario_health(int32_t marioId, uint16_t health)
@@ -508,6 +509,14 @@ SM64_LIB_FN void sm64_mario_interact_cap( int32_t marioId, uint32_t capFlag, uin
             play_cap_music(capMusic);
         }
 	}
+}
+
+SM64_LIB_FN void sm64_mario_extend_cap( int32_t marioId, uint16_t capTime )
+{
+    struct GlobalState *globalState = ((struct MarioInstance *)s_mario_instance_pool.objects[ marioId ])->globalState;
+    global_state_bind( globalState );
+
+    gMarioState->capTimer += capTime;
 }
 
 SM64_LIB_FN bool sm64_mario_attack(int32_t marioId, float x, float y, float z, float hitboxHeight)

@@ -1339,6 +1339,9 @@ void update_mario_geometry_inputs(struct MarioState *m) {
 		} else {
 			m->curTerrain = m->floor->terrain;
 		}
+        if(m->overrideFloorForce > 0) {
+			m->floor->force = m->overrideFloorForce;
+		}
 	}
 
     // If Mario is OOB, move his position to his graphical position (which was not updated)
@@ -1851,6 +1854,7 @@ int init_mario(void) {
 
 	gMarioState->overrideTerrain = 0x7;
 	gMarioState->overrideFloorType = 0x39;
+    gMarioState->overrideFloorForce = 0;
 
     gMarioState->floorHeight =
         find_floor(gMarioState->pos[0], gMarioState->pos[1], gMarioState->pos[2], &gMarioState->floor);

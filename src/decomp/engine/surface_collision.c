@@ -2,6 +2,8 @@
 #include "surface_collision.h"
 #include "../include/surface_terrains.h"
 #include "../../load_surfaces.h"
+#include "../game/object_stuff.h"
+#include <sm64.h>
 
 /**
  * Iterate through the list of ceilings and find the first ceiling over a given point.
@@ -247,6 +249,21 @@ static s32 find_wall_collisions_from_list( struct WallCollisionData *data) {
                 if ((y3 - y) * (w1 - w3) - (w3 - px) * (y1 - y3) < 0.0f) {
                     continue;
                 }
+            }
+        }
+
+        // If an object can pass through a vanish cap wall, pass through.
+        if (surf->type == SURFACE_VANISH_CAP_WALLS) {
+            // If an object can pass through a vanish cap wall, pass through.
+            if (gCurrentObject != NULL
+                && (gCurrentObject->activeFlags & ACTIVE_FLAG_MOVE_THROUGH_GRATE)) {
+                continue;
+            }
+
+            // If Mario has a vanish cap, pass through the vanish cap wall.
+            if (gCurrentObject != NULL && gCurrentObject == gMarioObject
+                && (gMarioState->flags & MARIO_VANISH_CAP)) {
+                continue;
             }
         }
 
