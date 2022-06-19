@@ -1635,7 +1635,7 @@ void mario_update_hitbox_and_cap_model(struct MarioState *m) {
     s32 flags = update_and_return_cap_flags(m);
 
     if (flags & MARIO_VANISH_CAP) {
-        bodyState->modelState = MODEL_STATE_NOISE_ALPHA;
+        //bodyState->modelState = MODEL_STATE_NOISE_ALPHA;
     }
 
     if (flags & MARIO_METAL_CAP) {
