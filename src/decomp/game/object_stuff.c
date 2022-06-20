@@ -319,6 +319,7 @@ int detect_object_hitbox_overlap(struct Object *a, struct SM64ObjectCollider *co
     return 0;
 }
 void resolve_object_collisions() {
+    if(gMarioState->flags & 0x00000002) return;
     for(int i = 0; i < s_object_collider_pool.size; i++) {
         if(s_object_collider_pool.objects[i] != NULL) {
             detect_object_hitbox_overlap(gMarioObject, s_object_collider_pool.objects[i]);
