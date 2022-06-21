@@ -618,9 +618,9 @@ s32 act_ledge_climb_slow(struct MarioState *m) {
         return check_common_action_exits(m);
     }
 
-    if (m->actionTimer == 10) {
+    //if (m->actionTimer == 10) {
         play_sound_if_no_flag(m, SOUND_MARIO_EEUH, MARIO_MARIO_SOUND_PLAYED);
-    }
+    //}
 
     update_ledge_climb(m, MARIO_ANIM_SLOW_LEDGE_GRAB, ACT_IDLE);
 
