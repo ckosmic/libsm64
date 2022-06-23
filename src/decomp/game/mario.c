@@ -471,6 +471,19 @@ u32 mario_get_terrain_sound_addend(struct MarioState *m) {
     s32 floorType;
 
     if (m->floor != NULL) {
+        if(m->overrideFloorType < 0x100) {
+			m->floor->type = m->overrideFloorType;
+		}
+		if(m->overrideTerrain < 0x7) {
+			m->curTerrain = m->overrideTerrain;
+			m->floor->terrain = m->overrideTerrain;
+		} else {
+			m->curTerrain = m->floor->terrain;
+		}
+        if(m->overrideFloorForce > 0) {
+			m->floor->force = m->overrideFloorForce;
+		}
+
         floorType = m->floor->type;
         s16 terrainType = m->curTerrain;
 
@@ -1330,7 +1343,7 @@ void update_mario_geometry_inputs(struct MarioState *m) {
     m->floorHeight = find_floor(m->pos[0], m->pos[1], m->pos[2], &m->floor);
 
 	if (m->floor != NULL) {
-		if(m->overrideFloorType < 0x39) {
+		if(m->overrideFloorType < 0x100) {
 			m->floor->type = m->overrideFloorType;
 		}
 		if(m->overrideTerrain < 0x7) {
@@ -1853,7 +1866,7 @@ int init_mario(void) {
     vec3f_set(gMarioState->vel, 0, 0, 0);
 
 	gMarioState->overrideTerrain = 0x7;
-	gMarioState->overrideFloorType = 0x39;
+	gMarioState->overrideFloorType = 0x100;
     gMarioState->overrideFloorForce = 0;
 
     gMarioState->floorHeight =
