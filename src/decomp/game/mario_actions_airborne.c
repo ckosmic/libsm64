@@ -1507,6 +1507,10 @@ s32 act_hold_butt_slide_air(struct MarioState *m) {
 }
 
 s32 act_hold_butt_slide_no_cancel(struct MarioState *m) {
+    m->faceAngle[0] = 0;
+    m->marioObj->header.gfx.angle[0] = 0;
+    m->faceAngle[2] = 0;
+    m->marioObj->header.gfx.angle[2] = 0;
     set_mario_animation(m, MARIO_ANIM_SLIDING_ON_BOTTOM_WITH_LIGHT_OBJ);
     tilt_body_butt_slide(m);
     return FALSE;
