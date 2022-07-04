@@ -582,10 +582,10 @@ s32 act_debug_free_move(struct MarioState *m) {
     set_mario_animation(m, MARIO_ANIM_A_POSE);
     vec3f_copy(pos, m->pos);
 
-    if (gPlayer1Controller->buttonDown & U_JPAD) {
+    if (gPlayer1Controller->buttonDown & A_BUTTON) {
         pos[1] += 16.0f * speed;
     }
-    if (gPlayer1Controller->buttonDown & D_JPAD) {
+    if (gPlayer1Controller->buttonDown & Z_TRIG) {
         pos[1] -= 16.0f * speed;
     }
 
@@ -608,14 +608,14 @@ s32 act_debug_free_move(struct MarioState *m) {
     vec3f_copy(m->marioObj->header.gfx.pos, m->pos);
     vec3s_set(m->marioObj->header.gfx.angle, 0, m->faceAngle[1], 0);
 
-    if (gPlayer1Controller->buttonPressed == A_BUTTON) {
-        if (m->pos[1] <= m->waterLevel - 100) {
-            action = ACT_WATER_IDLE;
-        } else {
-            action = ACT_IDLE;
-        }
-        set_mario_action(m, action, 0);
-    }
+    //if (gPlayer1Controller->buttonPressed == A_BUTTON) {
+    //    if (m->pos[1] <= m->waterLevel - 100) {
+    //        action = ACT_WATER_IDLE;
+    //    } else {
+    //        action = ACT_IDLE;
+    //    }
+    //    set_mario_action(m, action, 0);
+    //}
 
     return FALSE;
 }

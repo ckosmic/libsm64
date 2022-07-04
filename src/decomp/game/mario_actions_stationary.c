@@ -262,8 +262,10 @@ s32 act_start_sleeping(struct MarioState *m) {
 
 s32 act_wave(struct MarioState *m) {
 	m->actionTimer++;
-	
-	if (m->actionTimer > 90) {
+
+    if (m->actionTimer == 2) {
+        play_sound(SOUND_MARIO_HELLO, m->marioObj->header.gfx.cameraToObject);
+    } else if (m->actionTimer > 90) {
 		return set_mario_action(m, ACT_IDLE, 0);
 	}
 	
