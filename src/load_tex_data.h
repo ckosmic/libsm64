@@ -25,10 +25,28 @@ enum MarioTextures
     mario_texture_eyes_down
 };
 
-#define NUM_USED_TEXTURES 11
+#define FORMAT_RGBA 0
+#define FORMAT_IA 1
 
-static const int mario_tex_offsets[NUM_USED_TEXTURES] = { 144, 4240, 6288, 8336, 10384, 12432, 14480, 16528, 30864, 32912, 37008 };
-static const int mario_tex_widths [NUM_USED_TEXTURES] = { 64, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32 };
-static const int mario_tex_heights[NUM_USED_TEXTURES] = { 32, 32, 32, 32, 32, 32, 32, 32, 32, 64, 64 };
+struct Texture {
+    const int offset;
+    const int width;
+    const int height;
+    const int format;
+};
+
+typedef struct TextureAtlasInfo
+{
+    const uintptr_t offset;
+    const int numUsedTextures;
+    const int atlasWidth;
+    const int atlasHeight;
+    const struct Texture texInfos[];
+} TextureAtlasInfo;
+
+extern struct TextureAtlasInfo mario_atlas_info;
 
 extern void load_mario_textures_from_rom( uint8_t *rom, uint8_t *outTexture );
+extern void load_coin_textures_from_rom( uint8_t *rom, uint8_t *outTexture );
+extern void load_ui_textures_from_rom( uint8_t *rom, uint8_t *outTexture );
+extern void load_health_textures_from_rom( uint8_t *rom, uint8_t *outTexture );

@@ -63,6 +63,7 @@ struct SM64MarioState
 	uint32_t flags;
 	uint32_t particleFlags;
 	int16_t invincTimer;
+    uint8_t hurtCounter;
 };
 
 struct SM64MarioGeometryBuffers
@@ -117,6 +118,14 @@ struct SM64AnimInfo
 
 typedef void (*SM64DebugPrintFunctionPtr)( const char * );
 
+typedef enum
+{
+    SM64_TEXTURE_MARIO,
+    SM64_TEXTURE_COIN,
+    SM64_TEXTURE_UI,
+    SM64_TEXTURE_HEALTH,
+} SM64TextureAtlasType;
+
 enum
 {
     SM64_TEXTURE_WIDTH = 64 * 11,
@@ -124,9 +133,10 @@ enum
     SM64_GEO_MAX_TRIANGLES = 1024,
 };
 
-extern SM64_LIB_FN void sm64_global_init( uint8_t *rom, uint8_t *outTexture, SM64DebugPrintFunctionPtr debugPrintFunction );
+extern SM64_LIB_FN void sm64_global_init( uint8_t *rom, SM64DebugPrintFunctionPtr debugPrintFunction );
 extern SM64_LIB_FN void sm64_global_terminate( void );
 
+extern SM64_LIB_FN void sm64_texture_load( uint8_t *rom, SM64TextureAtlasType type, uint8_t *outTexture );
 extern SM64_LIB_FN void sm64_static_surfaces_load( const struct SM64Surface *surfaceArray, uint32_t numSurfaces );
 
 extern SM64_LIB_FN int32_t sm64_mario_create( float x, float y, float z, int16_t rx, int16_t ry, int16_t rz, uint8_t fake );

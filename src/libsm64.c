@@ -97,7 +97,7 @@ static void free_area( struct Area *area )
 }
 
 pthread_t gSoundThread;
-SM64_LIB_FN void sm64_global_init( uint8_t *rom, uint8_t *outTexture, SM64DebugPrintFunctionPtr debugPrintFunction )
+SM64_LIB_FN void sm64_global_init( uint8_t *rom, SM64DebugPrintFunctionPtr debugPrintFunction )
 {
 	g_debug_print_func = debugPrintFunction;
 	
@@ -121,7 +121,7 @@ SM64_LIB_FN void sm64_global_init( uint8_t *rom, uint8_t *outTexture, SM64DebugP
 
     s_init_global = true;
 
-    load_mario_textures_from_rom( rom, outTexture );
+    //load_mario_textures_from_rom( rom, outTexture );
     load_mario_anims_from_rom( rom );
 
     memory_init();
@@ -248,6 +248,27 @@ SM64_LIB_FN int32_t sm64_mario_create( float x, float y, float z, int16_t rx, in
     return marioIndex;
 }
 
+SM64_LIB_FN void sm64_texture_load( uint8_t *rom, SM64TextureAtlasType type, uint8_t *outTexture )
+{
+    DEBUG_PRINT("%p", outTexture);
+    switch(type) {
+        case SM64_TEXTURE_MARIO:
+            load_mario_textures_from_rom( rom, outTexture );
+            break;
+        case SM64_TEXTURE_COIN:
+            load_coin_textures_from_rom( rom, outTexture );
+            break;
+        case SM64_TEXTURE_UI:
+            load_ui_textures_from_rom( rom, outTexture );
+            break;
+        case SM64_TEXTURE_HEALTH:
+            load_health_textures_from_rom( rom, outTexture );
+            break;
+        default:
+            break;
+    }
+}
+
 SM64_LIB_FN struct SM64AnimInfo* sm64_mario_get_anim_info( int32_t marioId, int16_t rot[3] )
 {
 	if( marioId >= s_mario_instance_pool.size || s_mario_instance_pool.objects[marioId] == NULL )
@@ -338,6 +359,7 @@ SM64_LIB_FN void sm64_mario_tick( int32_t marioId, const struct SM64MarioInputs 
 	outState->flags = gMarioState->flags;
 	outState->particleFlags = gMarioState->particleFlags;
 	outState->invincTimer = gMarioState->invincTimer;
+    outState->hurtCounter = gMarioState->hurtCounter;
 }
 
 SM64_LIB_FN void sm64_mario_delete( int32_t marioId )
@@ -461,7 +483,7 @@ SM64_LIB_FN void sm64_mario_heal(int32_t marioId, uint8_t healCounter)
 	struct GlobalState *globalState = ((struct MarioInstance *)s_mario_instance_pool.objects[ marioId ])->globalState;
     global_state_bind( globalState );
 	
-	gMarioState->healCounter += healCounter;
+	gMarioState->healCounter += 4 * healCounter;
 }
 
 SM64_LIB_FN void sm64_mario_interact_cap( int32_t marioId, uint32_t capFlag, uint16_t capTime, uint8_t playMusic )
