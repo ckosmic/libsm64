@@ -48,6 +48,8 @@
 #include "decomp/tools/convTypes.h"
 #include "decomp/tools/convUtils.h"
 
+static int16_t lastWedges = 8;
+
 static struct AllocOnlyPool *s_mario_geo_pool = NULL;
 static struct GraphNode *s_mario_graph_node = NULL;
 static struct AudioAPI *audio_api;
@@ -184,7 +186,7 @@ SM64_LIB_FN void sm64_global_terminate( void )
 	   
 	ctl_free();
     free_obj_pool();
-    alloc_only_pool_free( s_mario_geo_pool );
+    if( s_init_one_mario ) alloc_only_pool_free( s_mario_geo_pool );
     surfaces_unload_all();
     unload_mario_anims();
     memory_terminate();
@@ -229,6 +231,8 @@ SM64_LIB_FN int32_t sm64_mario_create( float x, float y, float z, int16_t rx, in
     gMarioSpawnInfoVal.behaviorScript = NULL;
     gMarioSpawnInfoVal.unk18 = NULL;
     gMarioSpawnInfoVal.next = NULL;
+
+    lastWedges = 8;
 
     init_mario_from_save_file();
 	
@@ -351,6 +355,13 @@ SM64_LIB_FN void sm64_mario_tick( int32_t marioId, const struct SM64MarioInputs 
 
     gAreaUpdateCounter++;
 
+    // libsm64-retro64
+    int16_t numHealthWedges = gMarioState->health > 0 ? gMarioState->health >> 8 : 0;
+    if (numHealthWedges > lastWedges) {
+        play_sound(SOUND_MENU_POWER_METER, gGlobalSoundSource);
+    }
+    lastWedges = numHealthWedges;
+
     outState->health = gMarioState->health;
     vec3f_copy( outState->position, gMarioState->pos );
     vec3f_copy( outState->velocity, gMarioState->vel );
@@ -360,6 +371,7 @@ SM64_LIB_FN void sm64_mario_tick( int32_t marioId, const struct SM64MarioInputs 
 	outState->particleFlags = gMarioState->particleFlags;
 	outState->invincTimer = gMarioState->invincTimer;
     outState->hurtCounter = gMarioState->hurtCounter;
+    outState->numLives = gMarioState->numLives;
 }
 
 SM64_LIB_FN void sm64_mario_delete( int32_t marioId )

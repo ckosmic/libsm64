@@ -35,6 +35,7 @@
 #include "../include/mario_animation_ids.h"
 #include "../include/object_fields.h"
 #include "../include/mario_geo_switch_case_ids.h"
+#include "../../debug_print.h"
 
 
 
@@ -721,6 +722,10 @@ s32 common_death_handler(struct MarioState *m, s32 animation, s32 frameToDeathWa
 }
 
 s32 act_standing_death(struct MarioState *m) {
+    if (m->numLives > 0) {
+        return set_mario_action(m, ACT_DEATH_REVIVE, 0);
+    }
+
     if (m->input & INPUT_IN_POISON_GAS) {
         return set_mario_action(m, ACT_SUFFOCATION, 0);
     }
@@ -734,18 +739,30 @@ s32 act_standing_death(struct MarioState *m) {
 }
 
 s32 act_electrocution(struct MarioState *m) {
+    if (m->numLives > 0) {
+        return set_mario_action(m, ACT_DEATH_REVIVE, 0);
+    }
+
     play_sound_if_no_flag(m, SOUND_MARIO_DYING, MARIO_ACTION_SOUND_PLAYED);
     common_death_handler(m, MARIO_ANIM_ELECTROCUTION, 43);
     return FALSE;
 }
 
 s32 act_suffocation(struct MarioState *m) {
+    if (m->numLives > 0) {
+        return set_mario_action(m, ACT_DEATH_REVIVE, 0);
+    }
+
     play_sound_if_no_flag(m, SOUND_MARIO_DYING, MARIO_ACTION_SOUND_PLAYED);
     common_death_handler(m, MARIO_ANIM_SUFFOCATING, 86);
     return FALSE;
 }
 
 s32 act_death_on_back(struct MarioState *m) {
+    if (m->numLives > 0) {
+        return set_mario_action(m, ACT_DEATH_REVIVE, 0);
+    }
+
     play_sound_if_no_flag(m, SOUND_MARIO_DYING, MARIO_ACTION_SOUND_PLAYED);
     if (common_death_handler(m, MARIO_ANIM_DYING_ON_BACK, 54) == 40) {
         play_mario_heavy_landing_sound(m, SOUND_ACTION_TERRAIN_BODY_HIT_GROUND);
@@ -754,6 +771,10 @@ s32 act_death_on_back(struct MarioState *m) {
 }
 
 s32 act_death_on_stomach(struct MarioState *m) {
+    if (m->numLives > 0) {
+        return set_mario_action(m, ACT_DEATH_REVIVE, 0);
+    }
+
     play_sound_if_no_flag(m, SOUND_MARIO_DYING, MARIO_ACTION_SOUND_PLAYED);
     if (common_death_handler(m, MARIO_ANIM_DYING_ON_STOMACH, 37) == 37) {
         play_mario_heavy_landing_sound(m, SOUND_ACTION_TERRAIN_BODY_HIT_GROUND);
@@ -1183,6 +1204,38 @@ s32 act_exit_land_save_dialog(struct MarioState *m) {
 //  }
 
 //  m->marioObj->header.gfx.angle[1] += 0x8000;
+    return FALSE;
+}
+
+s32 act_death_revive(struct MarioState *m) {
+    s32 airStepLanded = (perform_air_step(m, 0) == AIR_STEP_LANDED);
+    
+    if (m->actionTimer == 0) {
+        m->health = 0x0100;
+        m->numLives--;
+        // restore 7.75 units of health
+        m->hurtCounter = 0;
+        m->healCounter = 31;
+        m->invincTimer = 60;
+
+        if (m->squishTimer > 0 || m->prevAction == ACT_IDLE) {
+            m->actionArg = 0x1000;
+            set_mario_animation(m, MARIO_ANIM_FALL_OVER_BACKWARDS);
+        }
+
+    } else if (m->actionArg != 0x1000 && m->actionTimer == 15) {
+        play_sound(SOUND_MARIO_MAMA_MIA, m->marioObj->header.gfx.cameraToObject);
+    } else if (m->actionArg == 0x1000 && m->actionTimer == 35) {
+        play_sound(SOUND_MARIO_MAMA_MIA, m->marioObj->header.gfx.cameraToObject);
+    }
+
+    if (is_anim_at_end(m)) {
+        m->actionArg = 0;
+        return set_mario_action(m, ACT_IDLE, 0);
+    }
+
+    m->forwardVel *= 0.9;
+    m->actionTimer++;
     return FALSE;
 }
 
@@ -2722,6 +2775,7 @@ s32 mario_execute_cutscene_action(struct MarioState *m) {
         case ACT_BUTT_STUCK_IN_GROUND:       cancel = act_butt_stuck_in_ground(m);       break;
         case ACT_FEET_STUCK_IN_GROUND:       cancel = act_feet_stuck_in_ground(m);       break;
         case ACT_PUTTING_ON_CAP:             cancel = act_putting_on_cap(m);             break;
+        case ACT_DEATH_REVIVE:               cancel = act_death_revive(m);               break;
     }
     /* clang-format on */
 
