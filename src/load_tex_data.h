@@ -35,18 +35,15 @@ struct Texture {
     const int format;
 };
 
-typedef struct TextureAtlasInfo
+struct TextureAtlasInfo
 {
     const uintptr_t offset;
     const int numUsedTextures;
     const int atlasWidth;
     const int atlasHeight;
     const struct Texture texInfos[];
-} TextureAtlasInfo;
+};
 
-extern struct TextureAtlasInfo mario_atlas_info;
+extern struct TextureAtlasInfo* mario_atlas_info;
 
-extern void load_mario_textures_from_rom( uint8_t *rom, uint8_t *outTexture );
-extern void load_coin_textures_from_rom( uint8_t *rom, uint8_t *outTexture );
-extern void load_ui_textures_from_rom( uint8_t *rom, uint8_t *outTexture );
-extern void load_health_textures_from_rom( uint8_t *rom, uint8_t *outTexture );
+extern void load_textures_from_rom( uint8_t *rom, struct TextureAtlasInfo* atlasInfo, uint8_t *outTexture );

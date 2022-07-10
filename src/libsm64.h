@@ -18,6 +18,9 @@
 
 #define LIB_VERSION 3
 
+#define FORMAT_RGBA 0
+#define FORMAT_IA 1
+
 struct SM64Surface
 {
     int16_t type;
@@ -116,16 +119,22 @@ struct SM64AnimInfo
 	int32_t animAccel;
 };
 
-
-typedef void (*SM64DebugPrintFunctionPtr)( const char * );
-
-typedef enum
+struct SM64Texture
 {
-    SM64_TEXTURE_MARIO,
-    SM64_TEXTURE_COIN,
-    SM64_TEXTURE_UI,
-    SM64_TEXTURE_HEALTH,
-} SM64TextureAtlasType;
+    const int offset;
+    const int width;
+    const int height;
+    const int format;
+};
+
+struct SM64TextureAtlasInfo
+{
+    const uintptr_t offset;
+    const int numUsedTextures;
+    const int atlasWidth;
+    const int atlasHeight;
+    const struct SM64Texture texInfos[];
+};
 
 enum
 {
@@ -134,10 +143,13 @@ enum
     SM64_GEO_MAX_TRIANGLES = 1024,
 };
 
+
+typedef void (*SM64DebugPrintFunctionPtr)( const char * );
+
 extern SM64_LIB_FN void sm64_global_init( uint8_t *rom, SM64DebugPrintFunctionPtr debugPrintFunction );
 extern SM64_LIB_FN void sm64_global_terminate( void );
 
-extern SM64_LIB_FN void sm64_texture_load( uint8_t *rom, SM64TextureAtlasType type, uint8_t *outTexture );
+extern SM64_LIB_FN void sm64_texture_load( uint8_t *rom, struct SM64TextureAtlasInfo *atlasInfo, uint8_t *outTexture );
 extern SM64_LIB_FN void sm64_static_surfaces_load( const struct SM64Surface *surfaceArray, uint32_t numSurfaces );
 
 extern SM64_LIB_FN int32_t sm64_mario_create( float x, float y, float z, int16_t rx, int16_t ry, int16_t rz, uint8_t fake );
@@ -158,6 +170,7 @@ extern SM64_LIB_FN void sm64_set_mario_floor_override(int32_t marioId, uint16_t 
 extern SM64_LIB_FN void sm64_set_mario_health(int32_t marioId, uint16_t health);
 extern SM64_LIB_FN void sm64_mario_take_damage(int32_t marioId, uint32_t damage, uint32_t subtype, float x, float y, float z);
 extern SM64_LIB_FN void sm64_mario_heal(int32_t marioId, uint8_t healCounter);
+extern SM64_LIB_FN void sm64_mario_set_lives(int32_t marioId, int32_t lives);
 extern SM64_LIB_FN void sm64_mario_interact_cap( int32_t marioId, uint32_t capFlag, uint16_t capTime, uint8_t playMusic );
 extern SM64_LIB_FN void sm64_mario_extend_cap( int32_t marioId, uint16_t capTime );
 extern SM64_LIB_FN bool sm64_mario_attack(int32_t marioId, float x, float y, float z, float hitboxHeight);
