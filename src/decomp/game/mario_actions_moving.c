@@ -1673,7 +1673,7 @@ s32 act_hard_forward_ground_kb(struct MarioState *m) {
         set_mario_action(m, ACT_DEATH_ON_STOMACH, 0);
     }
 
-    if (m->health < 0x100) {
+    if (m->health < 0x100 && m->numLives > 0) {
         return set_mario_action(m, ACT_DEATH_REVIVE, 0);
     }
 
@@ -1683,7 +1683,7 @@ s32 act_hard_forward_ground_kb(struct MarioState *m) {
 s32 act_backward_ground_kb(struct MarioState *m) {
     s32 animFrame = common_ground_knockback_action(m, MARIO_ANIM_BACKWARD_KB, 22, TRUE, m->actionArg);
 
-    if (animFrame == 10 && m->health < 0x100) {
+    if (animFrame == 10 && m->health < 0x100 && m->numLives > 0) {
         return set_mario_action(m, ACT_DEATH_REVIVE, 0);
     }
 
@@ -1693,7 +1693,7 @@ s32 act_backward_ground_kb(struct MarioState *m) {
 s32 act_forward_ground_kb(struct MarioState *m) {
     s32 animFrame = common_ground_knockback_action(m, MARIO_ANIM_FORWARD_KB, 20, TRUE, m->actionArg);
 
-    if (animFrame == 10 && m->health < 0x100) {
+    if (animFrame == 10 && m->health < 0x100 && m->numLives > 0) {
         return set_mario_action(m, ACT_DEATH_REVIVE, 0);
     }
 
@@ -1703,7 +1703,7 @@ s32 act_forward_ground_kb(struct MarioState *m) {
 s32 act_soft_backward_ground_kb(struct MarioState *m) {
     s32 animFrame = common_ground_knockback_action(m, MARIO_ANIM_SOFT_BACK_KB, 100, FALSE, m->actionArg);
 
-    if (animFrame == 10 && m->health < 0x100) {
+    if (animFrame == 10 && m->health < 0x100 && m->numLives > 0) {
         return set_mario_action(m, ACT_DEATH_REVIVE, 0);
     }
 
@@ -1713,7 +1713,7 @@ s32 act_soft_backward_ground_kb(struct MarioState *m) {
 s32 act_soft_forward_ground_kb(struct MarioState *m) {
     s32 animFrame = common_ground_knockback_action(m, MARIO_ANIM_SOFT_FRONT_KB, 100, FALSE, m->actionArg);
 
-    if (animFrame == 10 && m->health < 0x100) {
+    if (animFrame == 10 && m->health < 0x100 && m->numLives > 0) {
         return set_mario_action(m, ACT_DEATH_REVIVE, 0);
     }
 
