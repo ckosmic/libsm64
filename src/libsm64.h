@@ -68,6 +68,7 @@ struct SM64MarioState
 	int16_t invincTimer;
     uint8_t hurtCounter;
     int8_t numLives;
+    bool holdingObject;
 };
 
 struct SM64MarioGeometryBuffers

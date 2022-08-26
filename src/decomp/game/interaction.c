@@ -238,14 +238,15 @@ void mario_stop_riding_object(struct MarioState *m) {
 }
 
 void mario_grab_used_object(struct MarioState *m) {
-    if (m->heldObj == NULL) {
+    /*if (m->heldObj == NULL) {
         m->heldObj = m->usedObj;
 //      obj_set_held_state(m->heldObj, bhvCarrySomething3);
-    }
+    }*/
+    m->holdingObject = true;
 }
 
 void mario_drop_held_object(struct MarioState *m) {
-    if (m->heldObj != NULL) {
+    /*if (m->heldObj != NULL) {
     //  if (m->heldObj->behavior == segmented_to_virtual(bhvKoopaShellUnderwater)) {
     //      stop_shell_music();
     //  }
@@ -262,11 +263,12 @@ void mario_drop_held_object(struct MarioState *m) {
         m->heldObj->oMoveAngleYaw = m->faceAngle[1];
 
         m->heldObj = NULL;
-    }
+    }*/
+    m->holdingObject = false;
 }
 
 void mario_throw_held_object(struct MarioState *m) {
-    if (m->heldObj != NULL) {
+    /*if (m->heldObj != NULL) {
     //  if (m->heldObj->behavior == segmented_to_virtual(bhvKoopaShellUnderwater)) {
     //      stop_shell_music();
     //  }
@@ -280,17 +282,19 @@ void mario_throw_held_object(struct MarioState *m) {
         m->heldObj->oMoveAngleYaw = m->faceAngle[1];
 
         m->heldObj = NULL;
-    }
+    }*/
+    m->holdingObject = false;
 }
 
 void mario_stop_riding_and_holding(struct MarioState *m) {
-    mario_drop_held_object(m);
+    m->holdingObject = false;
+    /*mario_drop_held_object(m);
     mario_stop_riding_object(m);
 
     if (m->action == ACT_RIDING_HOOT) {
         m->usedObj->oInteractStatus = 0;
         m->usedObj->oHootMarioReleaseTime = gGlobalTimer;
-    }
+    }*/
 }
 
 u32 does_mario_have_normal_cap_on_head(struct MarioState *m) {

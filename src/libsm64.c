@@ -360,6 +360,7 @@ SM64_LIB_FN void sm64_mario_tick( int32_t marioId, const struct SM64MarioInputs 
 	outState->invincTimer = gMarioState->invincTimer;
     outState->hurtCounter = gMarioState->hurtCounter;
     outState->numLives = gMarioState->numLives;
+    outState->holdingObject = gMarioState->holdingObject;
 }
 
 SM64_LIB_FN void sm64_mario_delete( int32_t marioId )

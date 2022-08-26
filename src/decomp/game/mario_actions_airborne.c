@@ -555,7 +555,7 @@ s32 act_hold_jump(struct MarioState *m) {
         return drop_and_set_mario_action(m, ACT_FREEFALL, 0);
     }
 
-    if ((m->input & INPUT_B_PRESSED) && !(m->heldObj->oInteractionSubtype & INT_SUBTYPE_HOLDABLE_NPC)) {
+    if ((m->input & INPUT_B_PRESSED)/* && !(m->heldObj->oInteractionSubtype & INT_SUBTYPE_HOLDABLE_NPC)*/) {
         return set_mario_action(m, ACT_AIR_THROW, 0);
     }
 
@@ -581,7 +581,7 @@ s32 act_hold_freefall(struct MarioState *m) {
         return drop_and_set_mario_action(m, ACT_FREEFALL, 0);
     }
 
-    if ((m->input & INPUT_B_PRESSED) && !(m->heldObj->oInteractionSubtype & INT_SUBTYPE_HOLDABLE_NPC)) {
+    if ((m->input & INPUT_B_PRESSED)/* && !(m->heldObj->oInteractionSubtype & INT_SUBTYPE_HOLDABLE_NPC)*/) {
         return set_mario_action(m, ACT_AIR_THROW, 0);
     }
 
@@ -762,7 +762,7 @@ s32 act_dive(struct MarioState *m) {
                 m->particleFlags |= PARTICLE_MIST_CIRCLE;
                 drop_and_set_mario_action(m, ACT_HEAD_STUCK_IN_GROUND, 0);
             } else if (!check_fall_damage(m, ACT_HARD_FORWARD_GROUND_KB)) {
-                if (m->heldObj == NULL) {
+                if (m->holdingObject == false) {
                     set_mario_action(m, ACT_DIVE_SLIDE, 0);
                 } else {
                     set_mario_action(m, ACT_DIVE_PICKING_UP, 0);
@@ -1069,8 +1069,8 @@ s32 act_crazy_box_bounce(struct MarioState *m) {
             if (m->actionArg < 2) {
                 set_mario_action(m, ACT_CRAZY_BOX_BOUNCE, m->actionArg + 1);
             } else {
-                m->heldObj->oInteractStatus = INT_STATUS_STOP_RIDING;
-                m->heldObj = NULL;
+                //m->heldObj->oInteractStatus = INT_STATUS_STOP_RIDING;
+                //m->heldObj = NULL;
                 set_mario_action(m, ACT_STOMACH_SLIDE, 0);
             }
 #ifdef VERSION_SH
@@ -1305,7 +1305,7 @@ s32 act_getting_blown(struct MarioState *m) {
 }
 
 s32 act_air_hit_wall(struct MarioState *m) {
-    if (m->heldObj != NULL) {
+    if (m->holdingObject == true) {
         mario_drop_held_object(m);
     }
 

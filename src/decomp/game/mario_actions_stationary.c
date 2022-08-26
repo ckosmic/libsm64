@@ -71,11 +71,11 @@ s32 check_common_hold_idle_cancels(struct MarioState *m) {
         return mario_push_off_steep_floor(m, ACT_HOLD_FREEFALL, 0);
     }
 
-    if (m->heldObj->oInteractionSubtype & INT_SUBTYPE_DROP_IMMEDIATELY) {
+    /*if (m->heldObj->oInteractionSubtype & INT_SUBTYPE_DROP_IMMEDIATELY) {
         m->heldObj->oInteractionSubtype =
             (s32)(m->heldObj->oInteractionSubtype & ~INT_SUBTYPE_DROP_IMMEDIATELY);
         return set_mario_action(m, ACT_PLACING_DOWN, 0);
-    }
+    }*/
 
     if (m->input & INPUT_UNKNOWN_10) {
         return drop_and_set_mario_action(m, ACT_SHOCKWAVE_BOUNCE, 0);
