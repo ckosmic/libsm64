@@ -649,6 +649,13 @@ SM64_LIB_FN void sm64_set_volume(float volume)
     gTrackVolume = volume;
 }
 
+SM64_LIB_FN void sm64_set_reverb(uint8_t reverb)
+{
+    if(reverb < 0) reverb = 0;
+    else if(reverb > 0x7f) reverb = 0x7f;
+    gAudioReverb = reverb;
+}
+
 
 #ifdef VERSION_EU
 #define SAMPLES_HIGH 656

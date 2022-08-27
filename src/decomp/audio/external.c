@@ -78,6 +78,7 @@ s32 gAudioErrorFlags = 0;
 s32 sGameLoopTicked = 0;
 
 f32 gAudioVolume = 1.0f;
+u8 gAudioReverb = 0.0f;
 
 // Dialog sounds
 // The US difference is the sound for DIALOG_037 ("I win! You lose! Ha ha ha ha!
@@ -1309,10 +1310,12 @@ static u8 get_sound_reverb(UNUSED u8 bank, UNUSED u8 soundIndex, u8 channelIndex
     // reverb = reverb adjustment + level reverb + a volume-dependent value
     // The volume-dependent value is 0 when volume is at maximum, and raises to
     // LOW_VOLUME_REVERB when the volume is 0
-    reverb = (u8)((u8) gSequencePlayers[SEQ_PLAYER_SFX].channels[channelIndex]->soundScriptIO[5]
-                  + sLevelAreaReverbs[level][area]/*
+    /*reverb = (u8)((u8) gSequencePlayers[SEQ_PLAYER_SFX].channels[channelIndex]->soundScriptIO[5]
+                  + sLevelAreaReverbs[level][area]
                   + (US_FLOAT(1.0) - gSequencePlayers[SEQ_PLAYER_SFX].channels[channelIndex]->volume)
-                        * LOW_VOLUME_REVERB*/);
+                        * LOW_VOLUME_REVERB);*/
+
+    reverb = gAudioReverb;
 
     if (reverb > 0x7f) {
         reverb = 0x7f;

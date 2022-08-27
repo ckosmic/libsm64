@@ -193,6 +193,7 @@ extern SM64_LIB_FN uint32_t sm64_get_sound_arg(uint32_t bank, uint32_t playFlags
 extern SM64_LIB_FN void sm64_play_sound(int32_t soundBits, float *pos);
 extern SM64_LIB_FN void sm64_play_sound_global(int32_t soundBits);
 extern SM64_LIB_FN void sm64_set_volume(float volume);
+extern SM64_LIB_FN void sm64_set_reverb(uint8_t reverb);
 extern SM64_LIB_FN int sm64_get_version();
 
 void audio_tick();
