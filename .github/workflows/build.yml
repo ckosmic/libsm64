@@ -42,7 +42,7 @@ jobs:
         run: make
         
       - name: Generate .lib
-        run: genlibs.bat
+        run: dll2lib 64 dist\sm64.dll
         shell: cmd
         
       - name: Upload build artifacts
