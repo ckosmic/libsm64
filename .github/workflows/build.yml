@@ -27,18 +27,21 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
           update: true
-          install: git mingw-w64-x86_64-cc
+          install: git mingw-w64-x86_64-cc gcc make
 
       # Runs a single command using the runners shell
-      - name: Build
+      - name: Run make
         run: make
         
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: dist
+          name: libsm64
           path: dist
