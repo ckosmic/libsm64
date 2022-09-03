@@ -35,10 +35,14 @@ jobs:
           msystem: MINGW64
           update: true
           install: git mingw-w64-x86_64-cc gcc make
+      - uses: ilammy/msvc-dev-cmd@v1
 
       # Runs a single command using the runners shell
       - name: Run make
         run: make
+        
+      - name: Generate .lib
+        run: genlibs.bat
         
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
