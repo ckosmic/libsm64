@@ -264,6 +264,7 @@ void mario_drop_held_object(struct MarioState *m) {
 
         m->heldObj = NULL;
     }*/
+    m->dropMethod = 0;
     m->holdingObject = false;
 }
 
@@ -283,10 +284,12 @@ void mario_throw_held_object(struct MarioState *m) {
 
         m->heldObj = NULL;
     }*/
+    m->dropMethod = 1;
     m->holdingObject = false;
 }
 
 void mario_stop_riding_and_holding(struct MarioState *m) {
+    m->dropMethod = 0;
     m->holdingObject = false;
     /*mario_drop_held_object(m);
     mario_stop_riding_object(m);

@@ -368,6 +368,7 @@ struct MarioState
 	s16 overrideFloorType; // libsm64-gmod: added field
     s16 overrideFloorForce; // libsm64-gmod: added field
     u8 holdingObject; // libsm64-gmod: added field
+    u8 dropMethod; // libsm64-gmod: added field
 };
 
 #endif // TYPES_H

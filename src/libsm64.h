@@ -69,6 +69,7 @@ struct SM64MarioState
     uint8_t hurtCounter;
     int8_t numLives;
     bool holdingObject;
+    uint8_t dropMethod;
 };
 
 struct SM64MarioGeometryBuffers
