@@ -1,7 +1,7 @@
 default: lib
 
-CC      := gcc
-CXX 	:= g++
+CC      ?= cc
+CXX     ?= c++
 CFLAGS  := -g -Wall -fPIC -DSM64_LIB_EXPORT -DVERSION_US -DNO_SEGMENTED_MEMORY -DGBI_FLOATS
 LDFLAGS := -lm -shared -lpthread
 ENDFLAGS := -fPIC
@@ -39,7 +39,7 @@ ifeq ($(OS),Windows_NT)
   LIB_FILE := $(DIST_DIR)/sm64.dll
 endif
 
-DUMMY != mkdir -p $(ALL_DIRS) build/test src/decomp/mario $(DIST_DIR)/include 
+DUMMY != mkdir -p $(ALL_DIRS) build/test src/decomp/mario $(DIST_DIR)/include
 
 
 $(BUILD_DIR)/%.o: %.c $(IMPORTED)
