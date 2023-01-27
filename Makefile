@@ -1,7 +1,7 @@
 default: lib
 
-CC      ?= cc
-CXX     ?= c++
+CC      := cc
+CXX     := c++
 CFLAGS  := -g -Wall -fPIC -DSM64_LIB_EXPORT -DVERSION_US -DNO_SEGMENTED_MEMORY -DGBI_FLOATS
 LDFLAGS := -lm -shared -lpthread
 ENDFLAGS := -fPIC
